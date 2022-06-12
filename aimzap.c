@@ -64,26 +64,9 @@ void main(void)
 
 void draw_sprites(void)
 {
-	shot_location_x = 0;
-	shot_location_y = 0x0;
+	shot_location_x = x_lookups[zap1_light_read_pattern_0];
+	shot_location_y = y_lookups[zap1_light_read_pattern_0];
 	oam_clear(); // clear the sprites
-
-	if (zap1_light_read_pattern_1 == 0)
-	{
-		shot_location_x += 0x80; // on the right side of screen
-	}
-	if (zap1_light_read_pattern_2 == 0)
-	{
-		shot_location_y += 0x80; // on the bottom side of screen
-	}
-	if (zap1_light_read_pattern_3 == 1)
-	{
-		shot_location_x += 0x40; // on the bottom side of screen
-	}
-	if (zap1_light_read_pattern_4 == 0)
-	{
-		shot_location_y += 0x40; // on the bottom side of screen
-	}
 
 	// put a sprite wherever the player shot
 	oam_meta_spr(shot_location_x, shot_location_y, smiley);
@@ -126,31 +109,39 @@ void read_zapper_hits(void)
 
 	// frame 0:
 	ppu_mask(0x16); // BG off, won't happen till NEXT frame
-	zap1_light_read_pattern_0 = zap_read(0);
+	zap1_light_read_pattern_0 = 0;
 	ppu_wait_nmi(); // wait till the top of the next frame
 
 	// frame 1:
 	set_data_pointer(level1);
 	draw_bg();
 	zap1_light_read_pattern_1 = zap_read(0);
+	zap1_light_read_pattern_0 << 1;
+	zap1_light_read_pattern_0 = zap1_light_read_pattern_0 | zap1_light_read_pattern_1;
 	ppu_wait_nmi(); // wait till the top of the next frame
 
 	// frame 2:
 	set_data_pointer(level2);
 	draw_bg();
 	zap1_light_read_pattern_2 = zap_read(0);
+	zap1_light_read_pattern_0 << 1;
+	zap1_light_read_pattern_0 = zap1_light_read_pattern_0 | zap1_light_read_pattern_2;
 	ppu_wait_nmi(); // wait till the top of the next frame
 
 	// frame 3:
 	set_data_pointer(level3);
 	draw_bg();
 	zap1_light_read_pattern_3 = zap_read(0);
+	zap1_light_read_pattern_0 << 1;
+	zap1_light_read_pattern_0 = zap1_light_read_pattern_0 | zap1_light_read_pattern_3;
 	ppu_wait_nmi(); // wait till the top of the next frame
 
 	// frame 4:
 	set_data_pointer(level4);
 	draw_bg();
 	zap1_light_read_pattern_4 = zap_read(0);
+	zap1_light_read_pattern_0 << 1;
+	zap1_light_read_pattern_0 = zap1_light_read_pattern_0 | zap1_light_read_pattern_4;
 	ppu_wait_nmi(); // wait till the top of the next frame
 
 	// ALL DONE!

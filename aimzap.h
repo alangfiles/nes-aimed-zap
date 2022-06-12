@@ -24,6 +24,30 @@ unsigned char zap1_light_read_pattern_3;
 unsigned char zap1_light_read_pattern_4;
 unsigned char zap1_light_read_pattern_5;
 
+const unsigned char x_lookups[]={
+0,0,0x40,0x40,0x40,0x40,0,0,0xa0,0xa0,0x80,0x80,0x80,0x80,0xa0,0xa0
+};
+const unsigned char y_lookups[]={
+0,0x40,0x40,0,0xa0,0x80,0x80,0xa0,0xa0,0x80,0x80,0xa0,0,0x40,0x40,0
+};
+
+//0000 	0,0
+//0001 0,40
+//0010 40,40
+//0011 40,0
+//0100 40,a0
+//0101 40,80
+//0110 0,80
+//0111 0,a0
+//1000 a0,a0
+//1001 a0,80
+//1010 80,80
+//1011 80,a0
+//1100 80,0
+//1101 80,40
+//1110 a0,40
+//1111 a0,0
+
 // debuging with pad
 unsigned char pad1;
 unsigned char pad1_new;
