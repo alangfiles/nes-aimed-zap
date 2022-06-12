@@ -1,3 +1,3 @@
-# Double Zap
+# Aimed Zap
 
-An NES game that uses two zappers to pit 2 players against each other
+An NES game that allows the player to shoot a location on the screen, then records it.
