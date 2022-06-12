@@ -15,8 +15,14 @@ unsigned char trigger1_pulled;
 // unsigned char pad2_zapper;
 // unsigned char zap2_ready; //wait till it's 0
 // unsigned char zap2_hit_detected;
-unsigned char shot_location;
-unsigned char zap1_light_read_pattern;
+unsigned char shot_location_x;
+unsigned char shot_location_y;
+unsigned char zap1_light_read_pattern_0;
+unsigned char zap1_light_read_pattern_1;
+unsigned char zap1_light_read_pattern_2;
+unsigned char zap1_light_read_pattern_3;
+unsigned char zap1_light_read_pattern_4;
+unsigned char zap1_light_read_pattern_5;
 
 // debuging with pad
 unsigned char pad1;

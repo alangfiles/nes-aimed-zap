@@ -36,7 +36,8 @@ void main(void)
 		while (game_mode == MODE_TITLE) // gameloop
 		{
 			ppu_wait_nmi(); // wait till beginning of the frame
-			// todo, title stuff
+
+			set_data_pointer(level); // we set level pointer outside
 			draw_bg();
 
 			game_mode = MODE_GAME;
@@ -63,9 +64,29 @@ void main(void)
 
 void draw_sprites(void)
 {
+	shot_location_x = 0;
+	shot_location_y = 0x0;
 	oam_clear(); // clear the sprites
+
+	if (zap1_light_read_pattern_1 == 0)
+	{
+		shot_location_x += 0x80; // on the right side of screen
+	}
+	if (zap1_light_read_pattern_2 == 0)
+	{
+		shot_location_y += 0x80; // on the bottom side of screen
+	}
+	if (zap1_light_read_pattern_3 == 1)
+	{
+		shot_location_x += 0x40; // on the bottom side of screen
+	}
+	if (zap1_light_read_pattern_4 == 0)
+	{
+		shot_location_y += 0x40; // on the bottom side of screen
+	}
+
 	// put a sprite wherever the player shot
-	oam_meta_spr(0, 0, WhiteBox);
+	oam_meta_spr(shot_location_x, shot_location_y, smiley);
 }
 
 void read_input_triggers(void)
@@ -82,34 +103,60 @@ void read_input_triggers(void)
 	{
 		trigger1_pulled = 1;
 	}
-
-	// debug code (for using controller to shoot and miss)
-	//  pad1 = pad_poll(0);
-	//  pad1_new = get_pad_new(0);
-
-	// if ((pad1_new & PAD_A) && zap1_cooldown == 0) //((pad1_zapper) && (zap1_ready));
-	// {
-	// 	trigger1_pulled = 1;
-	// }
-	// if ((pad1_new & PAD_B) && zap2_cooldown == 0) //((pad2_zapper) && (zap2_ready));
-	// {
-	// 	trigger2_pulled = 1;
-	// }
 }
 
 void read_zapper_hits(void)
 {
 	// only reads the hit for the zapper pulled
-	// this should be the read code:
-	if (trigger1_pulled == 1)
-	{
-		zap1_hit_detected = zap_read(0); // look for light in zapper, port 1
-																		 // debug controller read code
-																		 //  if (pad1_new & PAD_A)
-																		 //  {
-																		 //  	zap1_hit_detected = 1;
-																		 //  }
-	}
+
+	// goes through 5 frames:
+	// frame 1: all black
+	// frame 2: halves
+	// frame 3: quarters
+	// frame 4: eights
+	// frame 5: sixteenths
+
+	// we read the zap_read for every frame
+	// then we can binary search style know where
+	// the player aimed at
+	// and we'll draw a cute thing there.
+
+	// clear all sprites
+	oam_clear();
+
+	// frame 0:
+	ppu_mask(0x16); // BG off, won't happen till NEXT frame
+	zap1_light_read_pattern_0 = zap_read(0);
+	ppu_wait_nmi(); // wait till the top of the next frame
+
+	// frame 1:
+	set_data_pointer(level1);
+	draw_bg();
+	zap1_light_read_pattern_1 = zap_read(0);
+	ppu_wait_nmi(); // wait till the top of the next frame
+
+	// frame 2:
+	set_data_pointer(level2);
+	draw_bg();
+	zap1_light_read_pattern_2 = zap_read(0);
+	ppu_wait_nmi(); // wait till the top of the next frame
+
+	// frame 3:
+	set_data_pointer(level3);
+	draw_bg();
+	zap1_light_read_pattern_3 = zap_read(0);
+	ppu_wait_nmi(); // wait till the top of the next frame
+
+	// frame 4:
+	set_data_pointer(level4);
+	draw_bg();
+	zap1_light_read_pattern_4 = zap_read(0);
+	ppu_wait_nmi(); // wait till the top of the next frame
+
+	// ALL DONE!
+
+	set_data_pointer(level);
+	draw_bg();
 }
 
 void draw_bg(void)
@@ -118,8 +165,7 @@ void draw_bg(void)
 	oam_clear(); // clear all sprites
 
 	set_mt_pointer(metatiles);
-	set_data_pointer(level);
-	memcpy(c_map, level, 240);
+	// memcpy(c_map, level, 240);
 
 	// draw the tiles
 	for (y = 0;; y += 0x20)

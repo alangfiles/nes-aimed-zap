@@ -1,9 +1,13 @@
 
 #include "CSV/level.c"
+#include "CSV/level1.c"
+#include "CSV/level2.c"
+#include "CSV/level3.c"
+#include "CSV/level4.c"
 
 const unsigned char palette_bg[] = {
-		0x0f, 0x00, 0x10, 0x30, // black, gray, lt gray, white
-		0x0f, 0x07, 0x17, 0x27, // oranges
+		0x0f, 0x0f, 0x0f, 0x0f, // black
+		0x30, 0x30, 0x30, 0x30, // white
 		0x0f, 0x02, 0x12, 0x22, // blues
 		0x0f, 0x09, 0x19, 0x29, // greens
 };
@@ -19,15 +23,18 @@ const unsigned char palette_sp[] = {
 // 51 maximum # of metatiles = 255 bytes
 
 const unsigned char metatiles[] = {
+		2, 2, 2, 2, 0,
+		2, 2, 2, 2, 1,
+		2, 2, 2, 2, 2,
 		2, 2, 2, 2, 3,
 		4, 4, 4, 4, 1,
 		9, 9, 9, 9, 2,
 		5, 6, 8, 7, 1,
 		5, 6, 8, 7, 0};
 
-const unsigned char WhiteBox[] = {
-		0, 0, 0xcb, 3 | OAM_FLIP_H,
-		8, 0, 0xcb, 3,
-		0, 8, 0xda, 3,
-		8, 8, 0xda, 3 | OAM_FLIP_H,
+const unsigned char smiley[] = {
+		0xff, 0xff, 0x02, 0,
+		7, 0xff, 0x03, 0,
+		0xff, 7, 0x12, 0,
+		7, 7, 0x13, 0,
 		128};
